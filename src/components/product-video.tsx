@@ -159,9 +159,9 @@ export default function ProductVideoPlayer({
         </button>
       </div>
 
-      {muted ? (
-        <p className="text-center text-[11px] font-bold text-muted-foreground">اضغط زر الصوت لسماع الشرح العربي</p>
-      ) : null}
+      <p className="text-center text-[11px] font-bold text-muted-foreground">
+        {muted ? "اضغط زر الصوت لسماع الشرح العربي للمنتج" : "شرح صوتي عربي: الاسم والنوع والقدرة وأهم المواصفات"}
+      </p>
     </div>
   );
 }
