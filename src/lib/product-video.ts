@@ -271,3 +271,40 @@ export const PRODUCT_VIDEOS: Record<string, ProductVideo> = {
 export function getProductVideo(productId: string): ProductVideo | null {
   return PRODUCT_VIDEOS[productId] ?? null;
 }
+
+/** ينطق الوحدات والرموز الهندسية بالعربية حتى يقرأها التعليق الصوتي سليمة. */
+function spokenValue(raw: string) {
+  return raw
+    .replace(/(\d)\s*~\s*(\d)/g, "$1 إلى $2")
+    .replace(/(\d)\s*[–-]\s*(\d)/g, "$1 إلى $2")
+    .replace(/>\s*/g, "أكثر من ")
+    .replace(/\+/g, " وأكثر")
+    .replace(/\bkWh\b/gi, "كيلو واط ساعة")
+    .replace(/\bWh\b/gi, "واط ساعة")
+    .replace(/\bkW\b/g, "كيلو واط")
+    .replace(/\bW\b/g, "واط")
+    .replace(/\bAh\b/gi, "أمبير ساعة")
+    .replace(/\bVdc\b/gi, "فولت تيار مستمر")
+    .replace(/\bV\b/g, "فولت")
+    .replace(/°\s*C/g, "درجة مئوية")
+    .replace(/%/g, " بالمئة")
+    .replace(/\bSingle Phase Hybrid\b/gi, "هجين أحادي الطور")
+    .replace(/\bSingle Phase\b/gi, "أحادي الطور")
+    .replace(/\bThree Phase\b/gi, "ثلاثي الأطوار")
+    .replace(/\bHybrid\b/gi, "هجين")
+    .replace(/\bLiFePO4\b/gi, "ليثيوم فوسفات الحديد")
+    .replace(/\bN-Type TOPCon\b/gi, "خلايا توبكون من النوع إن")
+    .replace(/\bPmax\b/gi, "")
+    .replace(/\s{2,}/g, " ")
+    .trim();
+}
+
+/** نص التعليق الصوتي العربي لفيديو المنتج: الاسم والموديل ثم أهم المواصفات كما في الكتالوج. */
+export function videoNarration(title: string, video: ProductVideo) {
+  const [name, model] = title.split("—").map((p) => p.trim());
+  const head = model ? `${name}، موديل ${model}.` : `${name}.`;
+  const specs = video.cues
+    .map((c) => `${c.label.replace(/\bPmax\b/gi, "").trim()} ${spokenValue(c.value)}`)
+    .join("، ");
+  return `${head} ${specs}.`;
+}
