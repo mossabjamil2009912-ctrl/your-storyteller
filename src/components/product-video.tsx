@@ -89,7 +89,7 @@ export default function ProductVideoPlayer({
           poster={video.poster}
           playsInline
           preload="auto"
-          muted={muted}
+          muted
           className="block aspect-video w-full object-cover"
           onPlay={() => setPlaying(true)}
           onPause={() => setPlaying(false)}
