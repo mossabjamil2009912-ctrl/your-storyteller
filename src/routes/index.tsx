@@ -75,7 +75,7 @@ import actesAvatar from "@/assets/actes-a-mark.webp";
 import actesMark from "@/assets/actes-a-mark.webp";
 import actesWordmark from "@/assets/actes-logo-full.webp";
 
-import { findCatalogProductByText, productsByCategory } from "@/lib/products-data";
+import { findCatalogProductForSpec } from "@/lib/products-data";
 import { runBot, type BotResult, type BotSession } from "@/lib/bot-engine.js";
 import { buildView, formatSystemName, money, type View } from "@/lib/present";
 import { CERTIFICATES, CERTIFICATES_TITLE } from "@/lib/warranty";
@@ -774,6 +774,7 @@ function ActesApp() {
               onPick={send}
               onBack={() => send("back_step")}
               onRestart={() => send("0")}
+              onOpenProduct={(id) => { setCatalog({ productId: id }); mainRef.current?.scrollTo({ top: 0 }); }}
             />
 
           ) : null}
@@ -1364,7 +1365,7 @@ function ServiceCard({ image, icon, title, description, action, tone, onClick }:
 
 }
 
-function QuoteWorkspace({ view, session, step, draft, setDraft, onPick, onBack, onRestart }: { view: View; session: BotSession; step: string; draft: string; setDraft: (value: string) => void; onPick: (value: string) => void; onBack: () => void; onRestart: () => void }) {
+function QuoteWorkspace({ view, session, step, draft, setDraft, onPick, onBack, onRestart, onOpenProduct }: { view: View; session: BotSession; step: string; draft: string; setDraft: (value: string) => void; onPick: (value: string) => void; onBack: () => void; onRestart: () => void; onOpenProduct?: ((id: string) => void) | undefined }) {
   const [selected, setSelected] = useState<string>("");
   // شاشة الدراسة تُعرض وحدها عند طلبها، وزر «العودة لعرض السعر» يعيد عرض الجدول
   const [showStudyOnly, setShowStudyOnly] = useState(false);
@@ -1436,7 +1437,7 @@ function QuoteWorkspace({ view, session, step, draft, setDraft, onPick, onBack, 
               )}
             </div>
 
-            {view.specs.length > 0 && <SystemSpecs specs={view.specs} />}
+            {view.specs.length > 0 && <SystemSpecs specs={view.specs} hint={[session["phase_type"], session["system_type"]].filter(Boolean).join(" ")} onOpenProduct={onOpenProduct} />}
             {view.quote && <QuoteCard quote={view.quote} />}
             {view.study && !studyFresh && <PvsystStudy study={view.study} />}
             {view.sld && <DetailCard icon={<Network />} title="المخطط الكهربائي أحادي الخط (SLD)" number={view.sld.number} rows={view.sld.rows} />}
@@ -1831,19 +1832,18 @@ function MediaGallery({ images }: { images: View["images"] }) {
 
 const SPEC_ICONS = [Sun, Zap, BatteryCharging, Network, Settings];
 
-/** صورة المكوّن تُؤخذ من صور الكتالوج الرسمية فقط — بمطابقة الموديل ثم القدرة ثم العلامة التجارية. */
-function catalogImageFor(text: string, category: "panels" | "inverters" | "batteries") {
-  const matched = findCatalogProductByText(text, category);
-  if (matched) return matched.image;
-  return productsByCategory(category)[0]?.image ?? null;
+/** منتج الكتالوج الحقيقي المطابق للبند — بالموديل الرسمي ثم القدرة المحسوبة ونوع الطور، بلا صور افتراضية. */
+function catalogMatchFor(text: string, category: "panels" | "inverters" | "batteries", hint: string) {
+  const matched = findCatalogProductForSpec(text, category, hint);
+  return { image: matched?.image ?? null, productId: matched?.id ?? null, model: matched ? `${matched.brand} ${matched.power}` : null };
 }
 
-function getSpecPresentation(title: string, lines: string[], index: number) {
+function getSpecPresentation(title: string, lines: string[], index: number, hint = "") {
   const text = [title, ...lines].join(" ");
-  if (/لوح|ألواح|شمسي/.test(title)) return { image: catalogImageFor(text, "panels"), label: "الألواح الشمسية", icon: Sun };
-  if (/انفرتر|إنفرتر|عاكس/.test(title)) return { image: catalogImageFor(text, "inverters"), label: "الإنفرتر", icon: Zap };
-  if (/بطارية|تخزين/.test(title)) return { image: catalogImageFor(text, "batteries"), label: "البطارية", icon: BatteryCharging };
-  return { image: null, label: title, icon: SPEC_ICONS[index % SPEC_ICONS.length] ?? Settings };
+  if (/لوح|ألواح|شمسي/.test(title)) return { ...catalogMatchFor(text, "panels", hint), label: "الألواح الشمسية", icon: Sun };
+  if (/انفرتر|إنفرتر|عاكس/.test(title)) return { ...catalogMatchFor(text, "inverters", hint), label: "الإنفرتر", icon: Zap };
+  if (/بطارية|تخزين/.test(title)) return { ...catalogMatchFor(text, "batteries", hint), label: "البطارية", icon: BatteryCharging };
+  return { image: null, productId: null, model: null, label: title, icon: SPEC_ICONS[index % SPEC_ICONS.length] ?? Settings };
 }
 
 function parseSpecFields(lines: string[]): { label: string; value: string }[] {
@@ -1879,7 +1879,7 @@ function parseSpecFields(lines: string[]): { label: string; value: string }[] {
   return rows;
 }
 
-function SystemSpecs({ specs }: { specs: View["specs"] }) {
+function SystemSpecs({ specs, hint = "", onOpenProduct }: { specs: View["specs"]; hint?: string; onOpenProduct?: ((id: string) => void) | undefined }) {
   return (
     <div className="space-y-3">
       <div className="text-center">
@@ -1890,7 +1890,7 @@ function SystemSpecs({ specs }: { specs: View["specs"] }) {
       </div>
       <div className="grid gap-2 grid-cols-2 sm:grid-cols-3 xl:grid-cols-6">
         {specs.map((group, index) => {
-          const presentation = getSpecPresentation(group.title, group.lines, index);
+          const presentation = getSpecPresentation(group.title, group.lines, index, hint);
           const Icon = presentation.icon;
           return (
             <article key={index} className="flex h-full flex-col overflow-hidden rounded-lg border border-border bg-card shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
@@ -1914,9 +1914,15 @@ function SystemSpecs({ specs }: { specs: View["specs"] }) {
                   </li>
                 ))}
               </ul>
+              {presentation.productId && onOpenProduct ? (
+                <button type="button" onClick={() => onOpenProduct(presentation.productId!)} className="mx-2 mb-2 mt-auto flex items-center gap-1.5 rounded-md bg-brand/10 px-2 py-1.5 text-[11px] font-bold text-foreground transition hover:bg-brand/20">
+                  <BadgeCheck className="size-4 shrink-0 text-brand" /> عرض تفاصيل المنتج
+                </button>
+              ) : (
               <div className="mx-2 mb-2 mt-auto flex items-center gap-1.5 rounded-md bg-brand/10 px-2 py-1.5 text-[11px] font-bold text-foreground">
                 <BadgeCheck className="size-4 shrink-0 text-brand" /> مكوّن موثوق
               </div>
+              )}
             </article>
           );
         })}
