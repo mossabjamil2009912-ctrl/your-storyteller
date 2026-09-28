@@ -1586,7 +1586,8 @@ function OptionGrid({ options, selected, projectCards = false, onSelect }: { opt
   }
 
   return (
-    <div className="grid gap-2 grid-cols-2 sm:grid-cols-3 xl:grid-cols-6">
+    <div className="stagger-in grid gap-2 grid-cols-2 sm:grid-cols-3 xl:grid-cols-6">
+
       {options.map((option, index) => {
         const active = selected === option.id;
         const Icon = index % 4 === 0 ? House : index % 4 === 1 ? Building2 : index % 4 === 2 ? Zap : BatteryCharging;
