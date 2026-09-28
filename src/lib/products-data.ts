@@ -950,3 +950,105 @@ export function findCatalogProductByText(text: string, category?: ProductCategor
   return null;
 }
 
+
+/** يحوّل حقل القدرة إلى مجال رقمي: "7.6 – 12 kW" → {min:7.6,max:12,unit:"kW"} */
+function powerRangeOf(product: Product): { min: number; max: number; unit: "W" | "kW" | "kWh" } | null {
+  const m = product.power.match(/([\d.]+)\s*(?:[–—-]\s*([\d.]+))?\s*(kWh|kW|W)/i);
+  if (!m || !m[1] || !m[3]) return null;
+  const min = Number(m[1]);
+  const max = m[2] ? Number(m[2]) : min;
+  if (!Number.isFinite(min) || !Number.isFinite(max)) return null;
+  const u = m[3].toLowerCase();
+  return { min, max, unit: u === "kwh" ? "kWh" : u === "kw" ? "kW" : "W" };
+}
+
+function isThreePhaseProduct(product: Product) {
+  return /ثلاثي\s*الطور|3\s*phase|three\s*phase/i.test(`${product.name} ${product.model}`);
+}
+
+function wantsThreePhase(text: string) {
+  return /ثلاثي|ثري\s*فاز|3\s*فاز|3\s*-?\s*phase|three\s*phase/i.test(text);
+}
+function wantsSinglePhase(text: string) {
+  return /أحادي|احادي|سنجل|1\s*فاز|single\s*phase|split\s*phase/i.test(text);
+}
+
+/** يقرأ قدرة/سعة مذكورة في النص بالكيلووات أو كيلووات-ساعة */
+function readKiloValue(text: string, unit: "kW" | "kWh") {
+  const pattern = unit === "kWh"
+    ? /([\d.,]+)\s*(?:kwh|كيلو\s*وات\s*ساعة|كيلووات\s*ساعة|ك\.و\.س)/i
+    : /([\d.,]+)\s*(?:kw\b|كيلو\s*وات|كيلووات)(?!\s*ساعة)/i;
+  const m = text.match(pattern);
+  if (!m || !m[1]) return null;
+  const n = Number(m[1].replace(",", "."));
+  return Number.isFinite(n) ? n : null;
+}
+
+/**
+ * يطابق بند المنظومة المقترحة مع منتج الكتالوج الحقيقي:
+ * الموديل الرسمي أولاً، ثم القدرة/السعة المحسوبة مع مراعاة نوع الطور.
+ * يعيد null إذا لم يوجد تطابق موثوق (لا صور افتراضية).
+ */
+export function findCatalogProductForSpec(text: string, category: ProductCategory, hint = ""): Product | null {
+  const full = `${text} ${hint}`;
+  const byModel = findCatalogProductByText(text, category);
+  const pool = PRODUCTS.filter((p) => p.category === category);
+
+  // الموديل الرسمي أو القدرة الصريحة للألواح: مطابقة مؤكدة
+  if (byModel && (normalizeModel(text).length > 0)) {
+    const modelHit = pool.some((p) => p.id === byModel.id && p.model.split(/[/|،,]/).some((v) => {
+      const t = normalizeModel(v);
+      return t.length >= 6 && normalizeModel(text).includes(t);
+    }));
+    if (modelHit) return byModel;
+  }
+
+  if (category === "panels") {
+    const watt = text.match(/(\d{3})\s*(?:وات|واط|W\b)/i);
+    if (watt?.[1]) {
+      const exact = pool.find((p) => p.power.includes(watt[1]!));
+      if (exact) return exact;
+    }
+    return byModel;
+  }
+
+  if (category === "inverters") {
+    const kw = readKiloValue(text, "kW");
+    if (kw != null) {
+      const three = wantsThreePhase(full) ? true : wantsSinglePhase(full) ? false : null;
+      const phaseOk = (p: Product) => three === null || isThreePhaseProduct(p) === three;
+      const ranged = pool
+        .map((p) => ({ p, r: powerRangeOf(p) }))
+        .filter((x): x is { p: Product; r: { min: number; max: number; unit: "W" | "kW" | "kWh" } } => !!x.r && x.r.unit === "kW");
+      const inRange = ranged.filter((x) => kw >= x.r.min - 0.05 && kw <= x.r.max + 0.05);
+      const pick = (list: typeof ranged) => {
+        const withPhase = list.filter((x) => phaseOk(x.p));
+        const base = withPhase.length ? withPhase : list;
+        return base.sort((a, b) => a.r.max - b.r.max)[0]?.p ?? null;
+      };
+      const hit = pick(inRange) ?? pick(ranged.filter((x) => x.r.max >= kw));
+      if (hit) return hit;
+    }
+    return byModel;
+  }
+
+  if (category === "batteries") {
+    const ah = text.match(/(\d{2,4})\s*(?:أمبير\s*ساعة|أمبير|امبير|Ah)\b/i);
+    if (ah?.[1]) {
+      const byAh = pool.find((p) => p.name.includes(`${ah[1]}Ah`) || p.model.includes(ah[1]!));
+      if (byAh) return byAh;
+    }
+    const kwh = readKiloValue(text, "kWh");
+    if (kwh != null) {
+      const ranked = pool
+        .map((p) => ({ p, r: powerRangeOf(p) }))
+        .filter((x) => x.r && x.r.unit === "kWh")
+        .map((x) => ({ p: x.p, diff: Math.abs(x.r!.min - kwh) }))
+        .sort((a, b) => a.diff - b.diff);
+      if (ranked[0]) return ranked[0].p;
+    }
+    return byModel;
+  }
+
+  return byModel;
+}
