@@ -22,3 +22,7 @@
 - Product specs, compatibility and images come only from the bundled catalogs or the manufacturer's official sources — never guess, never reuse a similar model's image.
 
 - The products catalog is information-only: no pricing, ordering, sales or quote flows may be linked into it.
+
+- Preserve all product videos at their original 1080p quality without compression or transcoding; the planned installed app bundles the complete media set because customers must install and use it offline.
+
+- Except for solar panels, every showroom product must sit on the standard white podium at its catalog-documented physical proportions; regenerate video from the corrected still so scale remains consistent.
