@@ -64,7 +64,7 @@ function CategoriesScreen({ onPick, onBack }: { onPick: (c: ProductCategory) => 
     "قسم منتجات أكتس. اختر الفئة التي تريد استعراضها: الألواح الشمسية، أو الإنفرترات، أو بطاريات الليثيوم.",
   );
   return (
-    <div className="w-full space-y-5 pb-4">
+    <div className="screen-enter w-full space-y-5 pb-4">
       <header className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <p className="text-[10px] font-black tracking-[0.3em] text-brand" dir="ltr">ACTES PRODUCTS</p>
