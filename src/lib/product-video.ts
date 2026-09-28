@@ -278,7 +278,7 @@ function spokenValue(raw: string) {
     .replace(/(\d)\s*~\s*(\d)/g, "$1 إلى $2")
     .replace(/(\d)\s*[–-]\s*(\d)/g, "$1 إلى $2")
     .replace(/>\s*/g, "أكثر من ")
-    .replace(/\+/g, " وأكثر")
+    .replace(/([\d.,]+)\s*\+/g, "أكثر من $1")
     .replace(/\bkWh\b/gi, "كيلو واط ساعة")
     .replace(/\bWh\b/gi, "واط ساعة")
     .replace(/\bkW\b/g, "كيلو واط")
