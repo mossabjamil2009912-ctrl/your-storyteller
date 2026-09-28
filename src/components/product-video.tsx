@@ -1,8 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import { Pause, Play, RotateCcw, SkipForward, Volume2, VolumeX } from "lucide-react";
 import type { ProductVideo } from "@/lib/product-video";
+import { videoNarration } from "@/lib/product-video";
+import { isVoiceOn, speak, stopSpeaking, unlockVoice } from "@/lib/voice-guide";
 
-/** مشغّل فيديو تعريف المنتج — فيديو حقيقي داخل معرض ACTES مع بطاقات مواصفات متزامنة مع التعليق الصوتي. */
+/** مشغّل فيديو تعريف المنتج — فيديو حقيقي داخل معرض ACTES مع تعليق صوتي عربي وبطاقات مواصفات متزامنة. */
 export default function ProductVideoPlayer({
   video,
   title,
@@ -14,20 +16,30 @@ export default function ProductVideoPlayer({
 }) {
   const ref = useRef<HTMLVideoElement | null>(null);
   const [playing, setPlaying] = useState(false);
-  const [muted, setMuted] = useState(false);
+  const [muted, setMuted] = useState(!isVoiceOn());
   const [time, setTime] = useState(0);
   const [duration, setDuration] = useState(0);
+  const narration = videoNarration(title, video);
+  const spokenRef = useRef("");
 
-  // بدء التشغيل تلقائياً؛ إذا منع المتصفح الصوت نعيد المحاولة صامتاً ليبدأ المشهد.
+  // الفيديو نفسه بلا مسار صوتي، والشرح يأتي من التعليق الصوتي العربي.
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    el.play().catch(() => {
-      el.muted = true;
-      setMuted(true);
-      el.play().catch(() => setPlaying(false));
-    });
+    el.muted = true;
+    el.play().catch(() => setPlaying(false));
   }, [video.src]);
+
+  // نطق اسم المنتج ونوعه وقدرته ومواصفاته مع بداية العرض.
+  useEffect(() => {
+    if (muted || !isVoiceOn() || spokenRef.current === narration) return;
+    spokenRef.current = narration;
+    unlockVoice();
+    void speak(narration, true);
+  }, [narration, muted]);
+
+  // إيقاف التعليق عند مغادرة الشاشة.
+  useEffect(() => () => stopSpeaking(), []);
 
   const cue = video.cues.find((c) => time >= c.at && time < c.until);
   const progress = duration ? Math.min(100, (time / duration) * 100) : 0;
@@ -36,7 +48,10 @@ export default function ProductVideoPlayer({
     const el = ref.current;
     if (!el) return;
     if (el.paused) void el.play();
-    else el.pause();
+    else {
+      el.pause();
+      stopSpeaking();
+    }
   };
 
   const replay = () => {
@@ -44,7 +59,26 @@ export default function ProductVideoPlayer({
     if (!el) return;
     el.currentTime = 0;
     void el.play();
+    stopSpeaking();
+    spokenRef.current = "";
+    if (!muted && isVoiceOn()) {
+      spokenRef.current = narration;
+      void speak(narration, true);
+    }
   };
+
+  const toggleSound = () => {
+    if (muted) {
+      setMuted(false);
+      unlockVoice();
+      spokenRef.current = narration;
+      void speak(narration, true);
+    } else {
+      setMuted(true);
+      stopSpeaking();
+    }
+  };
+
 
   return (
     <div className="w-full space-y-3">
@@ -55,7 +89,7 @@ export default function ProductVideoPlayer({
           poster={video.poster}
           playsInline
           preload="auto"
-          muted={muted}
+          muted
           className="block aspect-video w-full object-cover"
           onPlay={() => setPlaying(true)}
           onPause={() => setPlaying(false)}
@@ -97,8 +131,8 @@ export default function ProductVideoPlayer({
           </button>
           <button
             type="button"
-            onClick={() => setMuted((m) => !m)}
-            aria-label={muted ? "تشغيل الصوت" : "كتم الصوت"}
+            onClick={toggleSound}
+            aria-label={muted ? "تشغيل الشرح الصوتي" : "كتم الشرح الصوتي"}
             className="inline-flex size-9 items-center justify-center rounded-full bg-navy/75 text-skyline-foreground backdrop-blur transition hover:bg-navy"
           >
             {muted ? <VolumeX className="size-4" /> : <Volume2 className="size-4" />}
@@ -125,9 +159,9 @@ export default function ProductVideoPlayer({
         </button>
       </div>
 
-      {muted ? (
-        <p className="text-center text-[11px] font-bold text-muted-foreground">اضغط زر الصوت لسماع الشرح العربي</p>
-      ) : null}
+      <p className="text-center text-[11px] font-bold text-muted-foreground">
+        {muted ? "اضغط زر الصوت لسماع الشرح العربي للمنتج" : "شرح صوتي عربي: الاسم والنوع والقدرة وأهم المواصفات"}
+      </p>
     </div>
   );
 }
