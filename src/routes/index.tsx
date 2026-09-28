@@ -1889,7 +1889,7 @@ function SystemSpecs({ specs, hint = "", onOpenProduct }: { specs: View["specs"]
         </div>
         <p className="mt-1 text-[11px] leading-5 text-muted-foreground">تم اختيار المكونات المناسبة حسب بياناتك لتحقيق أفضل أداء وكفاءة</p>
       </div>
-      <div className="grid gap-2 grid-cols-2 sm:grid-cols-3 xl:grid-cols-6">
+      <div className="stagger-in grid gap-2 grid-cols-2 sm:grid-cols-3 xl:grid-cols-6">
         {specs.map((group, index) => {
           const presentation = getSpecPresentation(group.title, group.lines, index, hint);
           const Icon = presentation.icon;
