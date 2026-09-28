@@ -1561,7 +1561,7 @@ function OptionGrid({ options, selected, projectCards = false, onSelect }: { opt
       return { image: industrialImage, icon: Zap, subtitle: "للمشاريع الصناعية والمنشآت الكبرى" };
     };
     return (
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="stagger-in grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         {options.map((option, index) => {
           const visual = projectVisual(option.title);
           const Icon = visual.icon;
