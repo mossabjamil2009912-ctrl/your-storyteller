@@ -74,7 +74,7 @@ function CategoriesScreen({ onPick, onBack }: { onPick: (c: ProductCategory) => 
         <BackButton onClick={onBack} label="الرئيسية" />
       </header>
 
-      <div className="grid gap-4 md:grid-cols-3">
+      <div className="stagger-in grid gap-4 md:grid-cols-3">
         {CATEGORIES.map((cat) => {
           const items = productsByCategory(cat.id);
           const brands = Array.from(new Set(items.map((p) => p.brand)));
