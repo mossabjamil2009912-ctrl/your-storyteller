@@ -22,7 +22,6 @@ import p18 from "@/assets/products/p18.webp";
 import p19 from "@/assets/products/p19.webp";
 import p20 from "@/assets/products/p20.webp";
 import p21 from "@/assets/products/p21.webp";
-import c1 from "@/assets/products/c1.pdf.asset.json";
 import c2 from "@/assets/products/c2.pdf.asset.json";
 import c3 from "@/assets/products/c3.pdf.asset.json";
 import c4 from "@/assets/products/c4.pdf.asset.json";
