@@ -3,7 +3,7 @@
 import p2 from "@/assets/products/p2.webp";
 import p3 from "@/assets/products/p3.webp";
 import p4 from "@/assets/products/p4.webp";
-import p5 from "@/assets/products/p5.webp";
+import fidusBatteryPlusImage from "@/assets/products/pylontech-fidus-battery-plus.png";
 import cubeM5aImage from "@/assets/products/pylontech-powercube-m5a.png.asset.json";
 import lithium12v314ahImage from "@/assets/products/lithium-12v-314ah.png.asset.json";
 import heroeeNeoPower4G2Catalog from "@/assets/products/hithium-heroee-neopower-4-g2.pdf.asset.json";
@@ -779,7 +779,7 @@ export const PRODUCTS: Product[] = [
     ],
     compatible: { items: ["LV-HUB-V2 (مطلوب لربط عدة مجموعات، ويعمل كوحدة رئيسية)"], source: "ملاحظة الداتاشيت الرسمي لـ Pylontech Fidus Battery Plus." },
     certificates: "IEC62619، IEC63056، UN38.3، EMC/CE",
-    image: p5,
+    image: fidusBatteryPlusImage,
     files: sheet(c5.url),
   },
   {
