@@ -299,12 +299,73 @@ function spokenValue(raw: string) {
     .trim();
 }
 
-/** نص التعليق الصوتي العربي لفيديو المنتج: الاسم والموديل ثم أهم المواصفات كما في الكتالوج. */
+/** أسماء العلامات كما تُنطق بالعربية في التعليق الصوتي. */
+function spokenName(raw: string) {
+  return spokenValue(
+    raw
+      .replace(/\bSuntech\b/gi, "سن تك")
+      .replace(/\bDeye\b/gi, "داي")
+      .replace(/\bSolis\b/gi, "سوليس")
+      .replace(/\bLi-?Power\b/gi, "لي باور")
+      .replace(/\bPylontech\b/gi, "بايلونتك")
+      .replace(/\bHiTHIUM\b/gi, "هاي ثيوم")
+      .replace(/\bHeroEE\b/gi, "هيرو إي إي")
+      .replace(/\bMaxPower\b/gi, "ماكس باور")
+      .replace(/\bNeoPower\b/gi, "نيو باور")
+      .replace(/\bPowerCube\b/gi, "باور كيوب")
+      .replace(/\bFidus Battery Plus\b/gi, "فيدوس باتري بلس")
+      .replace(/\bSplit Phase\b/gi, "طور مجزّأ")
+      .replace(/[()]/g, " ")
+      .replace(/\s*\/\s*/g, " ")
+  );
+}
+
+/**
+ * صيغة الموديل المناسبة للنطق: نُبسّط الرموز الطويلة والمتعددة إلى وصف سلسلة مفهوم،
+ * ونحتفظ بالموديلات القصيرة فقط. القيمة null تعني: لا يُنطق الموديل إطلاقاً.
+ * النصوص المكتوبة في الكتالوج والبطاقات تبقى بالرموز الرسمية الكاملة دون تغيير.
+ */
+const SPOKEN_MODELS: Array<{ match: RegExp; spoken: string | null }> = [
+  { match: /^STP595S/i, spoken: "سلسلة إس تي بي 595" },
+  { match: /^STP720S/i, spoken: "سلسلة إس تي بي 720" },
+  { match: /SG04LP1/i, spoken: "سلسلة إس جي 04" },
+  { match: /SG02LP1/i, spoken: "سلسلة إس جي 02" },
+  { match: /SG05LP3/i, spoken: "سلسلة إس جي 05 ثلاثية الطور" },
+  { match: /SG01HP3/i, spoken: "سلسلة إس جي 01 عالية الجهد" },
+  { match: /SG02HP3/i, spoken: "سلسلة إس جي 02 عالية الجهد" },
+  { match: /^S6-EH2P/i, spoken: "سلسلة إس 6 إي إتش 2 بي" },
+  { match: /^S6-EH3P/i, spoken: "سلسلة إس 6 إي إتش 3 بي" },
+  { match: /^2012EMH/i, spoken: "موديل 2012" },
+  { match: /^BZ4024/i, spoken: "موديل بي زد 4024" },
+  { match: /^BZ6248/i, spoken: "موديل بي زد 6248" },
+  { match: /^RV12100/i, spoken: "موديل آر في 12100" },
+  { match: /^RV12200/i, spoken: "موديل آر في 12200" },
+  { match: /^NeoPower/i, spoken: "موديل نيو باور 4 الجيل الثاني" },
+  { match: /^FB-L-16/i, spoken: "سلسلة إف بي إل 16" },
+  { match: /^PowerCube-M5A/i, spoken: "سلسلة باور كيوب إم 5 إيه" },
+  { match: /^PowerCube-M1C/i, spoken: "سلسلة باور كيوب إم 1 سي" },
+  { match: /^HeroEE MaxPower/i, spoken: null },
+];
+
+/** الموديل بصيغة منطوقة سلسة، أو null إذا كان من الأفضل عدم نطقه. */
+function spokenModel(model: string) {
+  const hit = SPOKEN_MODELS.find((m) => m.match.test(model.trim()));
+  if (hit) return hit.spoken;
+  // موديل غير معروف: ننطقه فقط إذا كان قصيراً وبلا رموز مزدحمة.
+  const clean = model.trim();
+  if (clean.length <= 12 && !/[/()+–]/.test(clean)) return `موديل ${clean}`;
+  return null;
+}
+
+/** نص التعليق الصوتي العربي لفيديو المنتج: الاسم ثم أهم المواصفات كما في الكتالوج. */
 export function videoNarration(title: string, video: ProductVideo) {
-  const [name, model] = title.split("—").map((p) => p.trim());
-  const head = model ? `${name}، موديل ${model}.` : `${name}.`;
+  const [rawName, rawModel] = title.split("—").map((p) => p.trim());
+  const name = spokenName(rawName ?? "");
+  const model = rawModel ? spokenModel(rawModel) : null;
+  const head = model ? `${name}، ${model}.` : `${name}.`;
   const specs = video.cues
     .map((c) => `${c.label.replace(/\bPmax\b/gi, "").trim()} ${spokenValue(c.value)}`)
     .join("، ");
   return `${head} ${specs}.`;
 }
+
