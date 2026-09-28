@@ -5,7 +5,7 @@ import p2 from "@/assets/products/p2.webp";
 import p3 from "@/assets/products/p3.webp";
 import p4 from "@/assets/products/p4.webp";
 import p5 from "@/assets/products/p5.webp";
-import p6 from "@/assets/products/p6.webp";
+import cubeM5aImage from "@/assets/products/pylontech-powercube-m5a.png.asset.json";
 import p7 from "@/assets/products/p7.webp";
 import p8 from "@/assets/products/p8.webp";
 import p9 from "@/assets/products/p9.webp";
@@ -807,7 +807,7 @@ export const PRODUCTS: Product[] = [
       { title: "النظام الكامل", rows: [["سعة النظام", "15.68 × n kWh"], ["جهد النظام", "64 × n Vdc"], ["عدد الوحدات", "1~21"], ["التيار الاسمي / المستمر", "122.5 A / 180 A"], ["التيار الأقصى", "<210A لمدة 5 دقائق، <500A لمدة 30 ثانية"], ["كفاءة الدورة الكاملة (1C)", "96%"], ["عمق التفريغ", "95%"], ["أبعاد الخزانة", "1050 × 925 × 1965 mm (22 فتحة)"], ["الوزن", "210 + 115 × n kg"], ["الاتصال", "CANBUS / Modbus RTU / Modbus TCP/IP"], ["حرارة التشغيل", "10~40 °C"], ["العمر التشغيلي", "15+ سنة"]] },
     ],
     certificates: "إصدار UL: UL1973، UL9540A، UL9540، IEC62477-1، IEC62040-1، IEC62619، IEC63056، UKCA، CE LVD، CE EMC، UN38.3، VDE-AR-E 2510-50 — إصدار CE: IEC62477-1، IEC62040-1، IEC62619، IEC63056، UKCA، CE LVD، CE EMC، UN38.3، VDE-AR-E 2510-50، GB/T 36276-2018، GB/T 34131-2017",
-    image: p6,
+    image: cubeM5aImage.url,
     files: sheet(c6.url),
   },
   {
