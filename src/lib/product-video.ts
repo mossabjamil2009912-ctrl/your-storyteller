@@ -111,7 +111,7 @@ export const PRODUCT_VIDEOS: Record<string, ProductVideo> = {
     poster: suntech720Poster,
     cues: [
       { at: 0.5, until: 3.4, label: "القدرة القصوى Pmax", value: "720 W" },
-      { at: 3.4, until: 6.0, label: "نوع الخلية", value: "N-Type TOPCon زجاج-زجاج ثنائي الوجه" },
+      { at: 3.4, until: 6.0, label: "نوع الخلية", value: "N-Type TOPCon ثنائي الوجه" },
       { at: 6.0, until: 8.0, label: "كفاءة اللوح", value: "23.2%" },
       { at: 8.0, until: 10, label: "عدد الخلايا", value: "132 خلية" },
     ],
@@ -295,6 +295,7 @@ function spokenValue(raw: string) {
     .replace(/\bLiFePO4\b/gi, "ليثيوم فوسفات الحديد")
     .replace(/\bN-Type TOPCon\b/gi, "خلايا توبكون من النوع إن")
     .replace(/\bPmax\b/gi, "")
+    .replace(/زجاج\s*[-–]?\s*زجاج/g, "")
     .replace(/\s{2,}/g, " ")
     .trim();
 }
