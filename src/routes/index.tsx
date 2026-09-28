@@ -1279,7 +1279,7 @@ function HomeDashboard({ onService, onProducts }: { onService: (kind: "quote" | 
       <PartnersStrip />
 
 
-      <section className="grid shrink-0 grid-cols-2 gap-2 sm:grid-cols-4 lg:gap-3">
+      <section className="stagger-in grid shrink-0 grid-cols-2 gap-2 sm:grid-cols-4 lg:gap-3">
         <ServiceCard image={refCardQuote} icon={<FileText />} title="طلب عرض سعر" description="احصل على أفضل العروض والأسعار المناسبة لمشروعك." action="ابدأ الآن" tone="brand" onClick={() => onService("quote")} />
         <ServiceCard image={refCardEnergy} icon={<Sun />} title="حلول أنظمة الطاقة" description="اكتشف حلولنا المتكاملة لأنظمة الشمسية للمنازل والمنشآت." action="حلول الطاقة" tone="energy" onClick={() => onService("energy")} />
         <ServiceCard image={refCardSupport} icon={<Headphones />} title="الدعم الفني" description="فريقنا المتخصص جاهز لمساعدتك في أي استفسار أو مشكلة فنية." action="تواصل معنا" tone="skyline" onClick={() => onService("support")} />
