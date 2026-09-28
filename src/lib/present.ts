@@ -189,7 +189,7 @@ export function buildView(r: BotResult, step: string): View {
     if (m.kind === "text") texts.push(m.text);
     else if (m.kind === "image") {
       // Skip the shared branding banner sent as a WhatsApp/interactive header — it duplicates the hero.
-      if (/ACTES_message_header/i.test(m.url)) continue;
+      if (/actes[-_]?message[-_]?header/i.test(m.url)) continue;
       images.push({ url: m.url, caption: m.caption });
     }
     else if (m.kind === "video") videos.push({ url: m.url, caption: m.caption });
