@@ -131,8 +131,8 @@ export default function ProductVideoPlayer({
           </button>
           <button
             type="button"
-            onClick={() => setMuted((m) => !m)}
-            aria-label={muted ? "تشغيل الصوت" : "كتم الصوت"}
+            onClick={toggleSound}
+            aria-label={muted ? "تشغيل الشرح الصوتي" : "كتم الشرح الصوتي"}
             className="inline-flex size-9 items-center justify-center rounded-full bg-navy/75 text-skyline-foreground backdrop-blur transition hover:bg-navy"
           >
             {muted ? <VolumeX className="size-4" /> : <Volume2 className="size-4" />}
