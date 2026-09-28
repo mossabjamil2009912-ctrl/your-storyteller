@@ -774,6 +774,7 @@ function ActesApp() {
               onPick={send}
               onBack={() => send("back_step")}
               onRestart={() => send("0")}
+              onOpenProduct={(id) => { setCatalog({ productId: id }); mainRef.current?.scrollTo({ top: 0 }); }}
             />
 
           ) : null}
