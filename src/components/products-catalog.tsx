@@ -130,7 +130,8 @@ function CategoryView({ category, onOpen, onBack }: { category: ProductCategory;
   const items = useMemo(() => productsByCategory(category), [category]);
   useScreenVoice(`catalog-cat-${category}`, `${cat.title}. يتوفر ${items.length} موديل. اختر الموديل لعرض مواصفاته وملفاته الرسمية.`);
   return (
-    <div className="w-full space-y-4 pb-4">
+    <div className="screen-enter w-full space-y-4 pb-4">
+
       <BackButton onClick={onBack} label="الفئات" />
       <header className={`flex items-center gap-3 rounded-2xl px-4 py-4 shadow-sm ${CAT_TONE[category]}`}>
         <span className="shrink-0 opacity-90">{CAT_BIG_ICON[category]}</span>
