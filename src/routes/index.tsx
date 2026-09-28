@@ -1268,7 +1268,7 @@ function AppFooter() {
 
 function HomeDashboard({ onService, onProducts }: { onService: (kind: "quote" | "energy" | "support") => void; onProducts: () => void }) {
   return (
-    <div className="flex min-h-0 w-full flex-col gap-2 lg:h-full">
+    <div className="screen-enter flex min-h-0 w-full flex-col gap-2 lg:h-full">
       <CorporateHero />
       <section data-photo-section className="min-h-0 shrink overflow-hidden rounded-2xl border border-border bg-card shadow-sm lg:flex-1 lg:max-h-[30dvh]">
         <img src={homeHero} alt="أكتس لأنظمة الطاقة وحلولها" loading="eager" decoding="sync" fetchPriority="high" className="block aspect-[2064/416] w-full object-cover lg:h-full lg:w-full lg:aspect-auto" />
@@ -1279,7 +1279,7 @@ function HomeDashboard({ onService, onProducts }: { onService: (kind: "quote" | 
       <PartnersStrip />
 
 
-      <section className="grid shrink-0 grid-cols-2 gap-2 sm:grid-cols-4 lg:gap-3">
+      <section className="stagger-in grid shrink-0 grid-cols-2 gap-2 sm:grid-cols-4 lg:gap-3">
         <ServiceCard image={refCardQuote} icon={<FileText />} title="طلب عرض سعر" description="احصل على أفضل العروض والأسعار المناسبة لمشروعك." action="ابدأ الآن" tone="brand" onClick={() => onService("quote")} />
         <ServiceCard image={refCardEnergy} icon={<Sun />} title="حلول أنظمة الطاقة" description="اكتشف حلولنا المتكاملة لأنظمة الشمسية للمنازل والمنشآت." action="حلول الطاقة" tone="energy" onClick={() => onService("energy")} />
         <ServiceCard image={refCardSupport} icon={<Headphones />} title="الدعم الفني" description="فريقنا المتخصص جاهز لمساعدتك في أي استفسار أو مشكلة فنية." action="تواصل معنا" tone="skyline" onClick={() => onService("support")} />
@@ -1390,7 +1390,7 @@ function QuoteWorkspace({ view, session, step, draft, setDraft, onPick, onBack, 
   };
 
   return (
-    <div className="screen-enter w-full space-y-6 pb-8">
+    <div key={step} className="screen-enter w-full space-y-6 pb-8">
       <section className="min-w-0">
         <div className="mb-5 flex items-end justify-between gap-4 border-b border-border pb-3">
           <div>
@@ -1398,9 +1398,10 @@ function QuoteWorkspace({ view, session, step, draft, setDraft, onPick, onBack, 
             <span className="mt-2 block h-1 w-10 rounded-full bg-brand" />
           </div>
           <div className="flex shrink-0 items-center gap-2">
-            <button type="button" onClick={() => { if (studyScreen) { setShowStudyOnly(false); return; } onBack(); }} title="رجوع خطوة" aria-label="رجوع خطوة" className="grid size-10 place-items-center rounded-full border border-border bg-card text-skyline transition hover:border-brand hover:text-brand">
-              <ArrowRight className="size-5" />
+            <button type="button" onClick={() => { if (studyScreen) { setShowStudyOnly(false); return; } onBack(); }} title="رجوع خطوة" aria-label="رجوع خطوة" className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-3 py-2 text-xs font-bold text-navy shadow-sm transition hover:bg-muted hover:border-brand hover:text-brand lg:text-sm">
+              <ArrowRight className="size-4" /> رجوع
             </button>
+
             <button type="button" onClick={onRestart} title="العودة للبداية" aria-label="العودة للبداية" className={`size-10 place-items-center rounded-full border border-border bg-card text-skyline transition hover:border-brand hover:text-brand ${view.specs.length > 0 ? "hidden" : "grid"}`}>
               <RotateCcw className="size-5" />
             </button>
@@ -1529,7 +1530,7 @@ function OptionGrid({ options, selected, projectCards = false, onSelect }: { opt
 
   if (asActions) {
     return (
-      <div className="flex flex-wrap gap-3">
+      <div className="stagger-in flex flex-wrap gap-3">
         {options.map((option, index) => {
           const active = selected === option.id;
           const primary = index === 0;
@@ -1561,7 +1562,7 @@ function OptionGrid({ options, selected, projectCards = false, onSelect }: { opt
       return { image: industrialImage, icon: Zap, subtitle: "للمشاريع الصناعية والمنشآت الكبرى" };
     };
     return (
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="stagger-in grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         {options.map((option, index) => {
           const visual = projectVisual(option.title);
           const Icon = visual.icon;
@@ -1586,7 +1587,8 @@ function OptionGrid({ options, selected, projectCards = false, onSelect }: { opt
   }
 
   return (
-    <div className="grid gap-2 grid-cols-2 sm:grid-cols-3 xl:grid-cols-6">
+    <div className="stagger-in grid gap-2 grid-cols-2 sm:grid-cols-3 xl:grid-cols-6">
+
       {options.map((option, index) => {
         const active = selected === option.id;
         const Icon = index % 4 === 0 ? House : index % 4 === 1 ? Building2 : index % 4 === 2 ? Zap : BatteryCharging;
@@ -1888,7 +1890,7 @@ function SystemSpecs({ specs, hint = "", onOpenProduct }: { specs: View["specs"]
         </div>
         <p className="mt-1 text-[11px] leading-5 text-muted-foreground">تم اختيار المكونات المناسبة حسب بياناتك لتحقيق أفضل أداء وكفاءة</p>
       </div>
-      <div className="grid gap-2 grid-cols-2 sm:grid-cols-3 xl:grid-cols-6">
+      <div className="stagger-in grid gap-2 grid-cols-2 sm:grid-cols-3 xl:grid-cols-6">
         {specs.map((group, index) => {
           const presentation = getSpecPresentation(group.title, group.lines, index, hint);
           const Icon = presentation.icon;

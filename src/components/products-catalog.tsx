@@ -64,7 +64,7 @@ function CategoriesScreen({ onPick, onBack }: { onPick: (c: ProductCategory) => 
     "قسم منتجات أكتس. اختر الفئة التي تريد استعراضها: الألواح الشمسية، أو الإنفرترات، أو بطاريات الليثيوم.",
   );
   return (
-    <div className="w-full space-y-5 pb-4">
+    <div className="screen-enter w-full space-y-5 pb-4">
       <header className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <p className="text-[10px] font-black tracking-[0.3em] text-brand" dir="ltr">ACTES PRODUCTS</p>
@@ -74,7 +74,7 @@ function CategoriesScreen({ onPick, onBack }: { onPick: (c: ProductCategory) => 
         <BackButton onClick={onBack} label="الرئيسية" />
       </header>
 
-      <div className="grid gap-4 md:grid-cols-3">
+      <div className="stagger-in grid gap-4 md:grid-cols-3">
         {CATEGORIES.map((cat) => {
           const items = productsByCategory(cat.id);
           const brands = Array.from(new Set(items.map((p) => p.brand)));
@@ -130,7 +130,8 @@ function CategoryView({ category, onOpen, onBack }: { category: ProductCategory;
   const items = useMemo(() => productsByCategory(category), [category]);
   useScreenVoice(`catalog-cat-${category}`, `${cat.title}. يتوفر ${items.length} موديل. اختر الموديل لعرض مواصفاته وملفاته الرسمية.`);
   return (
-    <div className="w-full space-y-4 pb-4">
+    <div className="screen-enter w-full space-y-4 pb-4">
+
       <BackButton onClick={onBack} label="الفئات" />
       <header className={`flex items-center gap-3 rounded-2xl px-4 py-4 shadow-sm ${CAT_TONE[category]}`}>
         <span className="shrink-0 opacity-90">{CAT_BIG_ICON[category]}</span>
@@ -139,7 +140,7 @@ function CategoryView({ category, onOpen, onBack }: { category: ProductCategory;
           <p className="text-[12px] font-bold opacity-85">{cat.subtitle} — {items.length} موديل</p>
         </div>
       </header>
-      <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 lg:gap-3 xl:grid-cols-4">
+      <div className="stagger-in grid grid-cols-2 gap-2.5 sm:grid-cols-3 lg:gap-3 xl:grid-cols-4">
         {items.map((p) => <ProductCard key={p.id} product={p} onOpen={() => onOpen(p.id)} />)}
       </div>
     </div>
@@ -298,7 +299,8 @@ function ProductDetail({ product, onOpen, onBack }: { product: Product; onOpen: 
 
   if (!reelDone && video) {
     return (
-      <div className="w-full space-y-4 pb-4">
+      <div className="screen-enter w-full space-y-4 pb-4">
+
         <div className="flex flex-wrap items-center justify-between gap-2">
           <BackButton onClick={onBack} label={CATEGORIES.find((c) => c.id === product.category)?.title ?? "منتجاتنا"} />
           <span className="text-[11px] font-black text-skyline">{product.brand}</span>
@@ -310,7 +312,7 @@ function ProductDetail({ product, onOpen, onBack }: { product: Product; onOpen: 
 
 
   return (
-    <div className="w-full space-y-4 pb-4">
+    <div className="screen-enter w-full space-y-4 pb-4">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <BackButton onClick={onBack} label={CATEGORIES.find((c) => c.id === product.category)?.title ?? "منتجاتنا"} />
         <div className="flex items-center gap-2">
