@@ -1831,19 +1831,18 @@ function MediaGallery({ images }: { images: View["images"] }) {
 
 const SPEC_ICONS = [Sun, Zap, BatteryCharging, Network, Settings];
 
-/** صورة المكوّن تُؤخذ من صور الكتالوج الرسمية فقط — بمطابقة الموديل ثم القدرة ثم العلامة التجارية. */
-function catalogImageFor(text: string, category: "panels" | "inverters" | "batteries") {
-  const matched = findCatalogProductByText(text, category);
-  if (matched) return matched.image;
-  return productsByCategory(category)[0]?.image ?? null;
+/** منتج الكتالوج الحقيقي المطابق للبند — بالموديل الرسمي ثم القدرة المحسوبة ونوع الطور، بلا صور افتراضية. */
+function catalogMatchFor(text: string, category: "panels" | "inverters" | "batteries", hint: string) {
+  const matched = findCatalogProductForSpec(text, category, hint);
+  return { image: matched?.image ?? null, productId: matched?.id ?? null, model: matched ? `${matched.brand} ${matched.power}` : null };
 }
 
-function getSpecPresentation(title: string, lines: string[], index: number) {
+function getSpecPresentation(title: string, lines: string[], index: number, hint = "") {
   const text = [title, ...lines].join(" ");
-  if (/لوح|ألواح|شمسي/.test(title)) return { image: catalogImageFor(text, "panels"), label: "الألواح الشمسية", icon: Sun };
-  if (/انفرتر|إنفرتر|عاكس/.test(title)) return { image: catalogImageFor(text, "inverters"), label: "الإنفرتر", icon: Zap };
-  if (/بطارية|تخزين/.test(title)) return { image: catalogImageFor(text, "batteries"), label: "البطارية", icon: BatteryCharging };
-  return { image: null, label: title, icon: SPEC_ICONS[index % SPEC_ICONS.length] ?? Settings };
+  if (/لوح|ألواح|شمسي/.test(title)) return { ...catalogMatchFor(text, "panels", hint), label: "الألواح الشمسية", icon: Sun };
+  if (/انفرتر|إنفرتر|عاكس/.test(title)) return { ...catalogMatchFor(text, "inverters", hint), label: "الإنفرتر", icon: Zap };
+  if (/بطارية|تخزين/.test(title)) return { ...catalogMatchFor(text, "batteries", hint), label: "البطارية", icon: BatteryCharging };
+  return { image: null, productId: null, model: null, label: title, icon: SPEC_ICONS[index % SPEC_ICONS.length] ?? Settings };
 }
 
 function parseSpecFields(lines: string[]): { label: string; value: string }[] {
