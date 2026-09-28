@@ -80,10 +80,10 @@ export const PRODUCT_VIDEOS: Record<string, ProductVideo> = {
     src: pylontechVideo.url,
     poster: pylontechPoster,
     cues: [
-      { at: 0.5, until: 3.0, label: "الجهد المقنن", value: "12.8 V" },
-      { at: 3.0, until: 5.6, label: "السعة", value: "314 Ah" },
-      { at: 5.6, until: 7.8, label: "الطاقة", value: "4.02 kWh" },
-      { at: 7.8, until: 10, label: "عمر الدورات", value: "6000+ دورة" },
+      { at: 0.5, until: 3.0, label: "الجهد المقنن", value: "12.8 Vdc" },
+      { at: 3.0, until: 5.6, label: "سعة الخلايا", value: "314 Ah" },
+      { at: 5.6, until: 7.8, label: "سعة البطارية", value: "4019.2 Wh" },
+      { at: 7.8, until: 10, label: "عمر الدورات", value: "10000 دورة" },
     ],
   },
   "deye-sun-3-6k-sg04lp1": {
