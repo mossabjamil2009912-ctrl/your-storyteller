@@ -1529,7 +1529,7 @@ function OptionGrid({ options, selected, projectCards = false, onSelect }: { opt
 
   if (asActions) {
     return (
-      <div className="flex flex-wrap gap-3">
+      <div className="stagger-in flex flex-wrap gap-3">
         {options.map((option, index) => {
           const active = selected === option.id;
           const primary = index === 0;
