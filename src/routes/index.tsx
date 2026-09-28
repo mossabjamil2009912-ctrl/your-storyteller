@@ -1365,7 +1365,7 @@ function ServiceCard({ image, icon, title, description, action, tone, onClick }:
 
 }
 
-function QuoteWorkspace({ view, session, step, draft, setDraft, onPick, onBack, onRestart, onOpenProduct }: { view: View; session: BotSession; step: string; draft: string; setDraft: (value: string) => void; onPick: (value: string) => void; onBack: () => void; onRestart: () => void; onOpenProduct?: (id: string) => void }) {
+function QuoteWorkspace({ view, session, step, draft, setDraft, onPick, onBack, onRestart, onOpenProduct }: { view: View; session: BotSession; step: string; draft: string; setDraft: (value: string) => void; onPick: (value: string) => void; onBack: () => void; onRestart: () => void; onOpenProduct?: ((id: string) => void) | undefined }) {
   const [selected, setSelected] = useState<string>("");
   // شاشة الدراسة تُعرض وحدها عند طلبها، وزر «العودة لعرض السعر» يعيد عرض الجدول
   const [showStudyOnly, setShowStudyOnly] = useState(false);
@@ -1879,7 +1879,7 @@ function parseSpecFields(lines: string[]): { label: string; value: string }[] {
   return rows;
 }
 
-function SystemSpecs({ specs, hint = "", onOpenProduct }: { specs: View["specs"]; hint?: string; onOpenProduct?: (id: string) => void }) {
+function SystemSpecs({ specs, hint = "", onOpenProduct }: { specs: View["specs"]; hint?: string; onOpenProduct?: ((id: string) => void) | undefined }) {
   return (
     <div className="space-y-3">
       <div className="text-center">
