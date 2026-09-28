@@ -16,3 +16,5 @@
   - [x] lipower-bz4024smhgw، pylontech-rv12100ch، pylontech-rv12200
   - [x] pylontech-fidus-battery-plus، pylontech-powercube-m5a، pylontech-powercube-m1c
   - [x] اكتملت جميع فيديوهات المنتجات ✅
+
+- [ ] حذف الشاشة التفاعلية (الكشك) من جميع مشاهد المعرض والفيديوهات (21 منتجاً)
