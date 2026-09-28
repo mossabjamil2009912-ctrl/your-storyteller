@@ -6,6 +6,7 @@ import p3 from "@/assets/products/p3.webp";
 import p4 from "@/assets/products/p4.webp";
 import p5 from "@/assets/products/p5.webp";
 import cubeM5aImage from "@/assets/products/pylontech-powercube-m5a.png.asset.json";
+import lithium12v314ahImage from "@/assets/products/lithium-12v-314ah.png.asset.json";
 import p7 from "@/assets/products/p7.webp";
 import p8 from "@/assets/products/p8.webp";
 import p9 from "@/assets/products/p9.webp";
