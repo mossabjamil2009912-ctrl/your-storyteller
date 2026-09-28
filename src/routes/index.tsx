@@ -1398,9 +1398,10 @@ function QuoteWorkspace({ view, session, step, draft, setDraft, onPick, onBack, 
             <span className="mt-2 block h-1 w-10 rounded-full bg-brand" />
           </div>
           <div className="flex shrink-0 items-center gap-2">
-            <button type="button" onClick={() => { if (studyScreen) { setShowStudyOnly(false); return; } onBack(); }} title="رجوع خطوة" aria-label="رجوع خطوة" className="grid size-10 place-items-center rounded-full border border-border bg-card text-skyline transition hover:border-brand hover:text-brand">
-              <ArrowRight className="size-5" />
+            <button type="button" onClick={() => { if (studyScreen) { setShowStudyOnly(false); return; } onBack(); }} title="رجوع خطوة" aria-label="رجوع خطوة" className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-3 py-2 text-xs font-bold text-navy shadow-sm transition hover:bg-muted hover:border-brand hover:text-brand lg:text-sm">
+              <ArrowRight className="size-4" /> رجوع
             </button>
+
             <button type="button" onClick={onRestart} title="العودة للبداية" aria-label="العودة للبداية" className={`size-10 place-items-center rounded-full border border-border bg-card text-skyline transition hover:border-brand hover:text-brand ${view.specs.length > 0 ? "hidden" : "grid"}`}>
               <RotateCcw className="size-5" />
             </button>
