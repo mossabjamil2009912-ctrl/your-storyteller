@@ -748,7 +748,7 @@ export const PRODUCTS: Product[] = [
       { title: "الميكانيكية والأخرى", rows: [["الأبعاد (L×W×H)", "340 × 280 × 235"], ["الوزن", "≈31.5 kg"], ["نوع الأطراف", "M8 × 1.25 × 14 mm"], ["عزم الأطراف", "8 ± 1 Nm"], ["مادة الغلاف", "Metal"], ["الحماية", "IP55"], ["مفتاح", "نعم"], ["فيلم التسخين", "نعم"], ["BMS", "حمايات OC/OV/OT/UV/UT/SC"]] },
     ],
     certificates: "CE، UN38.3",
-    image: p1,
+    image: lithium12v314ahImage.url,
     files: sheet(c1.url),
   },
   {
