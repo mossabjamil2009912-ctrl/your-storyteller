@@ -1,11 +1,11 @@
 // بيانات «تعرف على منتجاتنا» — مصدر كل معلومة هو الكتالوج/الداتاشيت الرسمي المرفق لكل منتج.
 // لإضافة منتج: أضف كائناً جديداً في PRODUCTS بنفس البنية، وارفع صورته وملفه ثم استورد مؤشراتهما هنا.
-import p1 from "@/assets/products/p1.webp";
 import p2 from "@/assets/products/p2.webp";
 import p3 from "@/assets/products/p3.webp";
 import p4 from "@/assets/products/p4.webp";
 import p5 from "@/assets/products/p5.webp";
 import cubeM5aImage from "@/assets/products/pylontech-powercube-m5a.png.asset.json";
+import lithium12v314ahImage from "@/assets/products/lithium-12v-314ah.png.asset.json";
 import p7 from "@/assets/products/p7.webp";
 import p8 from "@/assets/products/p8.webp";
 import p9 from "@/assets/products/p9.webp";
@@ -747,7 +747,7 @@ export const PRODUCTS: Product[] = [
       { title: "الميكانيكية والأخرى", rows: [["الأبعاد (L×W×H)", "340 × 280 × 235"], ["الوزن", "≈31.5 kg"], ["نوع الأطراف", "M8 × 1.25 × 14 mm"], ["عزم الأطراف", "8 ± 1 Nm"], ["مادة الغلاف", "Metal"], ["الحماية", "IP55"], ["مفتاح", "نعم"], ["فيلم التسخين", "نعم"], ["BMS", "حمايات OC/OV/OT/UV/UT/SC"]] },
     ],
     certificates: "CE، UN38.3",
-    image: p1,
+    image: lithium12v314ahImage.url,
     files: sheet(c1.url),
   },
   {
