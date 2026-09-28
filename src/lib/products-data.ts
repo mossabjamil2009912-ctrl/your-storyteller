@@ -1,6 +1,5 @@
 // بيانات «تعرف على منتجاتنا» — مصدر كل معلومة هو الكتالوج/الداتاشيت الرسمي المرفق لكل منتج.
 // لإضافة منتج: أضف كائناً جديداً في PRODUCTS بنفس البنية، وارفع صورته وملفه ثم استورد مؤشراتهما هنا.
-import p1 from "@/assets/products/p1.webp";
 import p2 from "@/assets/products/p2.webp";
 import p3 from "@/assets/products/p3.webp";
 import p4 from "@/assets/products/p4.webp";
