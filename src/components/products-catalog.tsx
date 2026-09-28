@@ -312,7 +312,7 @@ function ProductDetail({ product, onOpen, onBack }: { product: Product; onOpen: 
 
 
   return (
-    <div className="w-full space-y-4 pb-4">
+    <div className="screen-enter w-full space-y-4 pb-4">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <BackButton onClick={onBack} label={CATEGORIES.find((c) => c.id === product.category)?.title ?? "منتجاتنا"} />
         <div className="flex items-center gap-2">
