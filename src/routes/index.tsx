@@ -1878,7 +1878,7 @@ function parseSpecFields(lines: string[]): { label: string; value: string }[] {
   return rows;
 }
 
-function SystemSpecs({ specs }: { specs: View["specs"] }) {
+function SystemSpecs({ specs, hint = "", onOpenProduct }: { specs: View["specs"]; hint?: string; onOpenProduct?: (id: string) => void }) {
   return (
     <div className="space-y-3">
       <div className="text-center">
@@ -1889,7 +1889,7 @@ function SystemSpecs({ specs }: { specs: View["specs"] }) {
       </div>
       <div className="grid gap-2 grid-cols-2 sm:grid-cols-3 xl:grid-cols-6">
         {specs.map((group, index) => {
-          const presentation = getSpecPresentation(group.title, group.lines, index);
+          const presentation = getSpecPresentation(group.title, group.lines, index, hint);
           const Icon = presentation.icon;
           return (
             <article key={index} className="flex h-full flex-col overflow-hidden rounded-lg border border-border bg-card shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
@@ -1913,9 +1913,15 @@ function SystemSpecs({ specs }: { specs: View["specs"] }) {
                   </li>
                 ))}
               </ul>
+              {presentation.productId && onOpenProduct ? (
+                <button type="button" onClick={() => onOpenProduct(presentation.productId!)} className="mx-2 mb-2 mt-auto flex items-center gap-1.5 rounded-md bg-brand/10 px-2 py-1.5 text-[11px] font-bold text-foreground transition hover:bg-brand/20">
+                  <BadgeCheck className="size-4 shrink-0 text-brand" /> عرض تفاصيل المنتج
+                </button>
+              ) : (
               <div className="mx-2 mb-2 mt-auto flex items-center gap-1.5 rounded-md bg-brand/10 px-2 py-1.5 text-[11px] font-bold text-foreground">
                 <BadgeCheck className="size-4 shrink-0 text-brand" /> مكوّن موثوق
               </div>
+              )}
             </article>
           );
         })}
