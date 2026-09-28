@@ -140,7 +140,7 @@ function CategoryView({ category, onOpen, onBack }: { category: ProductCategory;
           <p className="text-[12px] font-bold opacity-85">{cat.subtitle} — {items.length} موديل</p>
         </div>
       </header>
-      <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 lg:gap-3 xl:grid-cols-4">
+      <div className="stagger-in grid grid-cols-2 gap-2.5 sm:grid-cols-3 lg:gap-3 xl:grid-cols-4">
         {items.map((p) => <ProductCard key={p.id} product={p} onOpen={() => onOpen(p.id)} />)}
       </div>
     </div>
